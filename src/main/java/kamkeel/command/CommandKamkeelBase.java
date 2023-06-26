@@ -123,8 +123,8 @@ public abstract class CommandKamkeelBase extends CommandBase{
         return 2;
     }
 
-	public String getSubCommandPermission(String subCommand){
-		return "cnpc.kamkeel." + getCommandName().toLowerCase() + "." + subCommand.toLowerCase();
+	public String getSubCommandPermission(String parentCommand, String subCommand){
+		return "cnpc.kamkeel." + parentCommand.toLowerCase() + "." + subCommand.toLowerCase();
 	}
 
 	public String getSubUniversalPermission(){
@@ -136,12 +136,12 @@ public abstract class CommandKamkeelBase extends CommandBase{
 			return true;
 		}
 
-		if(sender.canCommandSenderUseCommand(command.permission(), getSubCommandPermission(subCommand))){
+		if(sender.canCommandSenderUseCommand(command.permission(), getSubCommandPermission(command.name(), subCommand))){
 			return true;
 		}
 
 		if(sender instanceof EntityPlayer){
-			return CustomNpcsPermissions.hasCustomPermission((EntityPlayer) sender, getSubCommandPermission(subCommand));
+			return CustomNpcsPermissions.hasCustomPermission((EntityPlayer) sender, getSubCommandPermission(command.name(), subCommand));
 		}
 
 		return false;

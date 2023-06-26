@@ -45,6 +45,13 @@ public class HelpCommand extends CommandKamkeelBase{
 			sender.addChatMessage(new ChatComponentTranslation(command.getCommandUsage(sender)));
 			return;
 		}
+
+		if(command.subcommands.isEmpty()){
+			sendMessage(sender, "\u00A78------ \u00A7a" + command.getCommandName().toUpperCase() + " \u00A78------");
+			sendMessage(sender, "\u00A77Usage: \u00A76" + command.getUsage());
+			sender.addChatMessage(new ChatComponentTranslation("\u00A78Permission:\u00A77 " + CommandKamkeel.getCommandPermission(command.getCommandName())));
+			return;
+		}
 		
 		Method m = null;
 		if(args.length > 1){
@@ -64,7 +71,7 @@ public class HelpCommand extends CommandKamkeelBase{
 			sender.addChatMessage(new ChatComponentTranslation("\u00A77" + sc.desc()));
 			if(!sc.usage().isEmpty())
 				sender.addChatMessage(new ChatComponentTranslation("\u00A77Usage: \u00A76" + sc.usage()));
-			sender.addChatMessage(new ChatComponentTranslation("\u00A78Permission:\u00A77 " + getSubCommandPermission(args[1])));
+			sender.addChatMessage(new ChatComponentTranslation("\u00A78Permission:\u00A77 " + getSubCommandPermission(command.getCommandName(), args[1])));
 		}
 	}
 }
