@@ -226,7 +226,9 @@ public class CustomItemRenderer implements IItemRenderer {
                     b0 = 4;
                 }
 
-                GL11.glScalef(scriptCustomItem.scaleX, scriptCustomItem.scaleY, scriptCustomItem.scaleZ);
+                if(!renderInFrame){
+                    GL11.glScalef(scriptCustomItem.scaleX, scriptCustomItem.scaleY, scriptCustomItem.scaleZ);
+                }
                 GL11.glTranslatef(-f7, -f8, -((f9 + f10) * (float)b0 / 2.0F));
 
                 for (int k = 0; k < b0; ++k)
