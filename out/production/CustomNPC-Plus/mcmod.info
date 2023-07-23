@@ -1,0 +1,19 @@
+[
+{
+  "modid": "customnpcs",
+  "name": "CustomNPC+",
+  "version": "1.7.10",
+  "mcversion": "1.7.10",
+  "description": "CustomNPC+ is a continuation of the Custom NPCs Mod which allows you to create NPCs with various different functionalities",
+  "credits": "Noppes (CNPC), DarkSignal (AI), Foxz (Commands) and tons more see original forums post and new CustomNPC+ Github",
+  "logoFile": "assets/customnpcs/textures/gui/logo.png",
+  "url": "https://tinyurl.com/customnpc-plus",
+  "updateUrl": "",
+  "authorList": [
+    "KAMKEEL (CNPC+)",
+    "Louis XII (CNPC+ Scripting)"],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": []
+}
+]
