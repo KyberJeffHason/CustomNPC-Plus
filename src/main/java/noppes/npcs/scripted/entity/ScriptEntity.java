@@ -15,6 +15,8 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.INbt;
 import noppes.npcs.api.IParticle;
@@ -363,7 +365,7 @@ public class ScriptEntity<T extends Entity> implements IEntity {
 	}
 
 	public void setMotion(IPos pos) {
-		this.setMotion(pos.getX(),pos.getY(),pos.getZ());
+		this.setMotion(pos.getXD(),pos.getYD(),pos.getZD());
 	}
 
 	public IPos getMotion() {
@@ -413,7 +415,7 @@ public class ScriptEntity<T extends Entity> implements IEntity {
 	}
 
 	public void setPos(IPos pos) {
-		this.entity.setPosition((double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)((float)pos.getZ() + 0.5F));
+		this.entity.setPosition(pos.getXD(), pos.getYD(), pos.getZD());
 	}
 
 	public void setPosition(IPos pos) {
@@ -427,7 +429,7 @@ public class ScriptEntity<T extends Entity> implements IEntity {
 	public void setDimension(int dimensionId) {
 		IWorld world = NpcAPI.Instance().getIWorld(dimensionId);
 		if (world != null) {
-			World mcWorld = world.getMCWorld();
+			WorldServer mcWorld = world.getMCWorld();
 			if (this.entity.riddenByEntity != null)
 			{
 				this.entity.riddenByEntity.mountEntity((Entity)null);
@@ -436,9 +438,23 @@ public class ScriptEntity<T extends Entity> implements IEntity {
 			{
 				this.entity.mountEntity((Entity)null);
 			}
+			WorldServer prevWorld = ((WorldServer)this.entity.worldObj);
+			prevWorld.unloadEntities(new ArrayList<Entity>(Collections.singleton(this.entity)));
+			prevWorld.resetUpdateEntityTick();
+			prevWorld.onEntityRemoved(this.entity);
+
 			this.entity.worldObj = mcWorld;
 			this.entity.dimension = dimensionId;
 			mcWorld.addLoadedEntities(new ArrayList<Entity>(Collections.singleton(this.entity)));
+			mcWorld.resetUpdateEntityTick();
+
+			mcWorld.updateEntityWithOptionalForce(this.entity, false);
+			if (this.entity instanceof EntityNPCInterface) {
+				((EntityNPCInterface) this.entity).updateClient();
+			}
+
+			mcWorld.spawnEntityInWorld(this.entity);
+			this.entity.velocityChanged = true;
 		}
 	}
 
@@ -776,14 +792,14 @@ public class ScriptEntity<T extends Entity> implements IEntity {
 		entity.velocityChanged = true;
 	}
 
-	public void knockback(int xpower, int ypower, int zpower, float direction){
+	public void knockback(double xpower, double ypower, double zpower, float direction){
 		float v = direction * (float)Math.PI / 180.0F;
-		entity.addVelocity(-MathHelper.sin(v) * (float)xpower, ypower, MathHelper.cos(v) * (float)zpower);
+		entity.addVelocity(-MathHelper.sin(v) * xpower, ypower, MathHelper.cos(v) * zpower);
 		entity.velocityChanged = true;
 	}
 
 	public void knockback(IPos pos, float direction){
-		this.knockback(pos.getX(),pos.getY(),pos.getZ(),direction);
+		this.knockback(pos.getXD(),pos.getYD(),pos.getZD(),direction);
 	}
 
 	public void setImmune(int ticks) {

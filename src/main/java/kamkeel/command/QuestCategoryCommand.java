@@ -11,10 +11,8 @@ import noppes.npcs.controllers.QuestController;
 import noppes.npcs.controllers.data.PlayerData;
 import noppes.npcs.controllers.data.Quest;
 import noppes.npcs.controllers.data.QuestCategory;
-import noppes.npcs.controllers.data.QuestData;
-
 import java.util.Collection;
-import java.util.HashMap;
+import noppes.npcs.controllers.data.QuestData;
 import java.util.List;
 
 public class QuestCategoryCommand extends CommandKamkeelBase {
@@ -40,7 +38,7 @@ public class QuestCategoryCommand extends CommandKamkeelBase {
         }
 
         String catName = String.join(" ", args).toLowerCase();
-        final Collection<QuestCategory> questCats = QuestController.instance.categories.values();
+        final Collection<QuestCategory> questCats = QuestController.Instance.categories.values();
         int count = 0;
         for(QuestCategory cat : questCats){
             if(cat.getName().toLowerCase().contains(catName)){
@@ -75,7 +73,7 @@ public class QuestCategoryCommand extends CommandKamkeelBase {
             return;
         }
         
-        QuestCategory questCategory = QuestController.instance.categories.get(questcatid);
+        QuestCategory questCategory = QuestController.Instance.categories.get(questcatid);
         if (questCategory == null){
         	sendError(sender, "Unknown QuestCatID: " + questcatid);
             return;
@@ -127,7 +125,7 @@ public class QuestCategoryCommand extends CommandKamkeelBase {
             return;
         }
 
-        QuestCategory questCategory = QuestController.instance.categories.get(questcatid);
+        QuestCategory questCategory = QuestController.Instance.categories.get(questcatid);
         if (questCategory == null){
             sendError(sender, "Unknown QuestCatID: " + questcatid);
             return;
@@ -169,7 +167,7 @@ public class QuestCategoryCommand extends CommandKamkeelBase {
             return;
         }
 
-        QuestCategory questCategory = QuestController.instance.categories.get(questcatid);
+        QuestCategory questCategory = QuestController.Instance.categories.get(questcatid);
         if (questCategory == null){
             sendError(sender, "Unknown QuestCatID: " + questcatid);
             return;
@@ -218,7 +216,7 @@ public class QuestCategoryCommand extends CommandKamkeelBase {
             return;
         }
 
-        QuestCategory questCategory = QuestController.instance.categories.get(questcatid);
+        QuestCategory questCategory = QuestController.Instance.categories.get(questcatid);
         if (questCategory == null){
             sendError(sender, "Unknown QuestCatID: " + questcatid);
             return;

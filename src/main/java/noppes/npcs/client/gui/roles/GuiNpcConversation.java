@@ -77,7 +77,7 @@ public class GuiNpcConversation extends GuiNPCInterface2 implements ITextfieldLi
     		setSubGui(new SubGuiNpcConversationLine(line.text, line.sound));
     	}
     	if(button.id == 51){
-			NoppesUtil.openGUI(player, questSelection = new GuiNPCQuestSelection(npc, this, job.quest));
+			NoppesUtil.openGUI(player, new GuiNPCQuestSelection(npc, this,  job.quest));
     	}
     	if(button.id == 52){
     		job.quest = -1;

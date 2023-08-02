@@ -174,7 +174,7 @@ public class ServerEventsHandler {
 		}
 
 		if(block == Blocks.crafting_table && event.action == Action.RIGHT_CLICK_BLOCK && !player.worldObj.isRemote){
-			RecipeController controller = RecipeController.instance;
+			RecipeController controller = RecipeController.Instance;
 			NBTTagList list = new NBTTagList();
 			int i = 0;
 			for(RecipeCarpentry recipe : controller.globalRecipes.values()){
@@ -196,7 +196,7 @@ public class ServerEventsHandler {
 			Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_WORKBENCH);
 		}
 		if(block == CustomItems.carpentyBench && event.action == Action.RIGHT_CLICK_BLOCK && !player.worldObj.isRemote){
-			RecipeController controller = RecipeController.instance;
+			RecipeController controller = RecipeController.Instance;
 			NBTTagList list = new NBTTagList();
 			int i = 0;
 			for(RecipeCarpentry recipe : controller.anvilRecipes.values()){
@@ -277,6 +277,17 @@ public class ServerEventsHandler {
 		if(event.entityLiving instanceof EntityPlayer){
 			PlayerData data = PlayerDataController.Instance.getPlayerData((EntityPlayer)event.entityLiving);
 			data.save();
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerClone(PlayerEvent.Clone event) {
+		if (event.entity.worldObj.isRemote)
+			return;
+
+		NBTTagCompound storedData = event.original.getEntityData().getCompoundTag("CNPCStoredData");
+		if (!storedData.hasNoTags()) {
+			event.entityPlayer.getEntityData().setTag("CNPCStoredData", storedData);
 		}
 	}
 

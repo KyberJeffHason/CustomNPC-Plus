@@ -50,7 +50,7 @@ public class QuestCommand extends CommandKamkeelBase {
             return;
         }
         
-        Quest quest = QuestController.instance.quests.get(questid);
+        Quest quest = QuestController.Instance.quests.get(questid);
         if (quest == null){
         	sendError(sender, "Unknown QuestID: " + questid);
             return;
@@ -89,7 +89,7 @@ public class QuestCommand extends CommandKamkeelBase {
             return;
         }
         
-        Quest quest = QuestController.instance.quests.get(questid);
+        Quest quest = QuestController.Instance.quests.get(questid);
         if (quest == null){
         	sendError(sender, "Unknown QuestID: " + questid);
             return;
@@ -131,7 +131,7 @@ public class QuestCommand extends CommandKamkeelBase {
         	sendError(sender, String.format("Unknown player '%s'", playername));
             return;
         }
-        Quest quest = QuestController.instance.quests.get(questid);
+        Quest quest = QuestController.Instance.quests.get(questid);
         if (quest == null){
         	sendError(sender, "Unknown QuestID: " + questid);
             return;
@@ -163,7 +163,7 @@ public class QuestCommand extends CommandKamkeelBase {
             return;
         }
         
-        Quest quest = QuestController.instance.quests.get(questid);
+        Quest quest = QuestController.Instance.quests.get(questid);
         if (quest == null){
         	sendError(sender, String.format("Unknown QuestID"));
             return;
@@ -188,7 +188,7 @@ public class QuestCommand extends CommandKamkeelBase {
         }
 
         String catName = String.join(" ", args).toLowerCase();
-        final Collection<Quest> quests = QuestController.instance.quests.values();
+        final Collection<Quest> quests = QuestController.Instance.quests.values();
         int count = 0;
         for(Quest quest : quests){
             if(quest.getName().toLowerCase().contains(catName)){
@@ -219,12 +219,12 @@ public class QuestCommand extends CommandKamkeelBase {
             return;
         }
 
-        Quest quest = QuestController.instance.quests.get(questid);
+        Quest quest = QuestController.Instance.quests.get(questid);
         if (quest == null){
             sendError(sender, "Unknown QuestID");
             return;
         }
-        final Collection<Quest> quests = QuestController.instance.quests.values();
+        final Collection<Quest> quests = QuestController.Instance.quests.values();
         sendResult(sender, "Prerequisites:");
         sendResult(sender, "--------------------");
         boolean foundOne = false;
@@ -259,7 +259,7 @@ public class QuestCommand extends CommandKamkeelBase {
             return;
         }
 
-        Quest quest = QuestController.instance.quests.get(questid);
+        Quest quest = QuestController.Instance.quests.get(questid);
         if (quest == null){
             sendError(sender, "Unknown QuestID");
             return;
@@ -286,7 +286,7 @@ public class QuestCommand extends CommandKamkeelBase {
     )      
     public void reload(ICommandSender sender, String args[]){
     	new QuestController();
-        QuestController.instance.load();
+        QuestController.Instance.load();
         sendResult(sender, "Quests Reloaded");
     }
 }

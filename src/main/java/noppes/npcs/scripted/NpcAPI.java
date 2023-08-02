@@ -45,6 +45,7 @@ import noppes.npcs.api.handler.data.IFramePart;
 import noppes.npcs.api.handler.data.ISound;
 import noppes.npcs.api.item.IItemStack;
 import noppes.npcs.api.overlay.ICustomOverlay;
+import noppes.npcs.compat.PixelmonHelper;
 import noppes.npcs.config.ConfigScript;
 import noppes.npcs.constants.EnumAnimationPart;
 import noppes.npcs.containers.ContainerNpcInterface;
@@ -147,23 +148,23 @@ public class NpcAPI extends AbstractNpcAPI {
 
     public IRecipeHandler getRecipes() {
         this.checkWorld();
-        return RecipeController.instance;
+        return RecipeController.Instance;
     }
 
     public IQuestHandler getQuests() {
         this.checkWorld();
-        return QuestController.instance;
+        return QuestController.Instance;
     }
 
     public IDialogHandler getDialogs() {
-        return DialogController.instance;
+        return DialogController.Instance;
     }
 
     public ICloneHandler getClones() {
         return ServerCloneController.Instance;
     }
 
-    public INaturalSpawnsHandler getNaturalSpawns() { return SpawnController.instance; }
+    public INaturalSpawnsHandler getNaturalSpawns() { return SpawnController.Instance; }
 
     public ITransportHandler getLocations() {
         return TransportController.getInstance();
@@ -171,7 +172,7 @@ public class NpcAPI extends AbstractNpcAPI {
 
     public IAnimationHandler getAnimations() {
         this.checkWorld();
-        return AnimationController.instance;
+        return AnimationController.Instance;
     }
 
     @Override
@@ -220,7 +221,7 @@ public class NpcAPI extends AbstractNpcAPI {
 
     public INpc[] getChunkLoadingNPCs() {
         ArrayList<INpc> list = new ArrayList<>();
-        Set<Entity> npcSet = ChunkController.instance.tickets.keySet();
+        Set<Entity> npcSet = ChunkController.Instance.tickets.keySet();
         for (Entity entity : npcSet) {
             if (entity instanceof EntityNPCInterface) {
                 list.add((INpc) NpcAPI.Instance().getIEntity(entity));
@@ -276,16 +277,16 @@ public class NpcAPI extends AbstractNpcAPI {
         return new ScriptBlockPos(pos);
     }
 
-    public IPos getIPos(int x, int y, int z) {
-        return new ScriptBlockPos(new BlockPos(x,y,z));
+    public IPos getIPos(double x, double y, double z) {
+        return this.getIPos(new BlockPos(x,y,z));
     }
 
-    public IPos getIPos(double x, double y, double z) {
-        return this.getIPos((int)x,(int)y,(int)z);
+    public IPos getIPos(int x, int y, int z) {
+        return this.getIPos((double) x, (double) y, (double) z);
     }
 
     public IPos getIPos(float x, float y, float z) {
-        return this.getIPos((int)x,(int)y,(int)z);
+        return this.getIPos((double) x, (double) y, (double) z);
     }
 
     public IPos getIPos(long serializedPos) {

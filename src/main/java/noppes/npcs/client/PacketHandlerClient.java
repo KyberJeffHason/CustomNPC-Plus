@@ -32,6 +32,7 @@ import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.controllers.RecipeController;
 import noppes.npcs.controllers.data.Animation;
+import noppes.npcs.controllers.data.AnimationData;
 import noppes.npcs.controllers.data.RecipeCarpentry;
 import noppes.npcs.entity.EntityDialogNpc;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -97,7 +98,7 @@ public class PacketHandlerClient extends PacketHandlerServer{
             RecipeController.syncRecipes = new HashMap<Integer, RecipeCarpentry>();
 		}
 		else if(type == EnumPacketClient.SYNCRECIPES_CARPENTRYBENCH){
-            RecipeController.instance.anvilRecipes = RecipeController.syncRecipes;
+            RecipeController.Instance.anvilRecipes = RecipeController.syncRecipes;
             RecipeController.syncRecipes = new HashMap<Integer, RecipeCarpentry>();
 		}
 		else if(type == EnumPacketClient.DIALOG){
@@ -167,6 +168,12 @@ public class PacketHandlerClient extends PacketHandlerServer{
 		}
 		else if(type == EnumPacketClient.SCROLL_DATA_PART){
 			NoppesUtil.addScrollData(buffer);
+		}
+		else if(type == EnumPacketClient.SCROLL_GROUP){
+			NoppesUtil.setScrollGroup(buffer);
+		}
+		else if(type == EnumPacketClient.SCROLL_GROUP_PART){
+			NoppesUtil.addScrollGroup(buffer);
 		}
 		else if(type == EnumPacketClient.SCROLL_SELECTED){
 			GuiScreen gui = Minecraft.getMinecraft().currentScreen;

@@ -13,7 +13,6 @@ import noppes.npcs.controllers.data.Quest;
 
 public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSelectionListener, IGuiData {
 	private Availability availabitily;
-	private boolean selectFaction = false;
 	private int slot = 0;
 	
     public SubGuiNpcAvailabilityQuest(Availability availabitily){
@@ -22,7 +21,7 @@ public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSe
 		xSize = 316;
 		ySize = 216;
 		closeOnEsc = true;
-    }
+	}
 
     @Override
     public void initGui(){
@@ -66,6 +65,7 @@ public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSe
 		getButton(11).setDisplayText("availability.selectquest");
 		getButton(12).setDisplayText("availability.selectquest");
 		getButton(13).setDisplayText("availability.selectquest");
+
 		if(availabitily.questId >= 0){
 			Client.sendData(EnumPacketServer.QuestGet, availabitily.questId);
 		}
@@ -108,30 +108,29 @@ public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSe
         		availabitily.quest4Id = -1;
         	initGui();
         }
-
         if(button.id == 10){
         	slot = 1;
         	GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.questId);
         	gui.listener = this;
-        	NoppesUtil.openGUI(player, gui);
+			NoppesUtil.openGUI(player, gui);
         }
         if(button.id == 11){
         	slot = 2;
         	GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest2Id);
         	gui.listener = this;
-        	NoppesUtil.openGUI(player, gui);
+			NoppesUtil.openGUI(player, gui);
         }
         if(button.id == 12){
         	slot = 3;
         	GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest3Id);
         	gui.listener = this;
-        	NoppesUtil.openGUI(player, gui);
+			NoppesUtil.openGUI(player, gui);
         }
         if(button.id == 13){
         	slot = 4;
         	GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest4Id);
         	gui.listener = this;
-        	NoppesUtil.openGUI(player, gui);
+			NoppesUtil.openGUI(player, gui);
         }
 
         if(button.id == 20){

@@ -1,6 +1,5 @@
 package noppes.npcs.client.gui.player;
 
-import com.sun.javafx.geom.Vec3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -8,14 +7,9 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.api.handler.data.IDialogImage;
@@ -53,10 +47,6 @@ public class GuiDialogInteract extends GuiNPCInterface implements IGuiClose
 	private String gradualText = "";
 	private int currentBlock = 0;
 	private int currentLine = 0;
-
-	private EntityLivingBase cameraTarget;
-	private float transitionProgress;
-
 	private int gradualTextTime = 0;
 	private int optionStart = 0;
 
@@ -76,8 +66,6 @@ public class GuiDialogInteract extends GuiNPCInterface implements IGuiClose
 	private int textSoundTime = 0;
 	private int textPauseTime = 0;
 
-	private InvisibleCameraEntity invisibleEntity;
-
 	private HashMap<Integer,GuiDialogImage> dialogImages = new HashMap<>();
 
     public GuiDialogInteract(EntityNPCInterface npc, Dialog dialog){
@@ -91,30 +79,7 @@ public class GuiDialogInteract extends GuiNPCInterface implements IGuiClose
     	indicator = this.getResource("indicator.png");
     	wheelparts = new ResourceLocation[]{getResource("wheel1.png"),getResource("wheel2.png"),getResource("wheel3.png"),
     			getResource("wheel4.png"),getResource("wheel5.png"),getResource("wheel6.png")};
-
-		this.invisibleEntity = new InvisibleCameraEntity(player.worldObj);
-		this.invisibleEntity.setInvisible(true);
     }
-
-	public class InvisibleCameraEntity extends Entity {
-		public InvisibleCameraEntity(World world) {
-			super(world);
-		}
-
-		@Override
-		protected void setSize(float p_70105_1_, float p_70105_2_) {
-			super.setSize(0.0F, 0.0F);
-		}
-
-		@Override
-		protected void entityInit() {}
-
-		@Override
-		protected void readEntityFromNBT(NBTTagCompound tagCompund) {}
-
-		@Override
-		protected void writeEntityToNBT(NBTTagCompound tagCompound) {}
-	}
 
     public void initGui(){
     	super.initGui();
@@ -142,45 +107,93 @@ public class GuiDialogInteract extends GuiNPCInterface implements IGuiClose
 		 }
     }
 
-	private float updateRotation(float angle, float targetAngle, float maxIncrease) {
-		float f = MathHelper.wrapAngleTo180_float(targetAngle - angle);
-
-		if (f > maxIncrease) {
-			f = maxIncrease;
-		}
-
-		if (f < -maxIncrease) {
-			f = -maxIncrease;
-		}
-
-		return angle + f;
-	}
-
-
     public void drawScreen(int i, int j, float f){
         GL11.glColor4f(1, 1, 1, 1);
 
-		if(!dialog.hideNPC){
-			// Calculate the position to look at the target
-			double d0 = cameraTarget.posX - invisibleEntity.posX;
-			double d2 = cameraTarget.posZ - invisibleEntity.posZ;
-			double d1;
+        if(!dialog.hideNPC){
+	    	float l = (guiLeft - 70);
+	    	float i1 =  (guiTop + ySize);
+	        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+	        GL11.glPushMatrix();
+	        GL11.glTranslatef(l + dialog.npcOffsetX, i1 + dialog.npcOffsetY, 50F);
+	        float zoomed = npc.height;
+	        if(npc.width * 2 > zoomed)
+	        	zoomed = npc.width * 2;
+	        zoomed =  2 / zoomed * 40;
+	        GL11.glScalef(-zoomed, zoomed, zoomed);
+	        GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+	        float f2 = npc.renderYawOffset;
+	        float f3 = npc.rotationYaw;
+	        float f4 = npc.rotationPitch;
+	        float f7 = npc.rotationYawHead;
+	        float f5 = (float)(l) - i;
+	        float f6 = (float)(i1 - 50) - j;
+	        int rotation = npc.ai.orientation;
+	        npc.ai.orientation = 0;
+	        GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
+	        RenderHelper.enableStandardItemLighting();
+	        GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
+	        GL11.glRotatef(-(float)Math.atan(f6 / 80F) * 20F, 1.0F, 0.0F, 0.0F);
+	        npc.renderYawOffset = 0;
+	        npc.rotationYaw = (float)Math.atan(f5 / 80F) * 40F;
+	        npc.rotationPitch = -(float)Math.atan(f6 / 80F) * 20F;
+	        npc.prevRotationYawHead = npc.rotationYawHead = npc.rotationYaw;
+	        GL11.glTranslatef(0.0F, npc.yOffset, 0.0F);
+	        RenderManager.instance.playerViewY = 180F;
 
-			if (cameraTarget instanceof EntityLivingBase)
-			{
-				EntityLivingBase entitylivingbase = (EntityLivingBase)cameraTarget;
-				d1 = entitylivingbase.posY + (double)entitylivingbase.getEyeHeight() - (invisibleEntity.posY + (double)invisibleEntity.getEyeHeight());
-			}
-			else
-			{
-				d1 = (cameraTarget.boundingBox.minY + cameraTarget.boundingBox.maxY) / 2.0D - (invisibleEntity.posY + (double)invisibleEntity.getEyeHeight());
+	        try{
+				GL11.glScalef(dialog.npcScale,dialog.npcScale,dialog.npcScale);
+	            RenderManager.instance.renderEntityWithPosYaw(npc, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+	        } catch(Exception ignored){}
+
+	        npc.ai.orientation = rotation;
+	        npc.renderYawOffset = f2;
+	        npc.rotationYaw = f3;
+	        npc.rotationPitch = f4;
+	        npc.prevRotationYawHead = npc.rotationYawHead = f7;
+	        GL11.glPopMatrix();
+	        RenderHelper.disableStandardItemLighting();
+	        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+	        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+	        GL11.glDisable(GL11.GL_TEXTURE_2D);
+	        OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        }
+        super.drawScreen(i, j, f);
+		setOptionOffset();
+
+        GL11.glEnable(GL11.GL_BLEND);
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+
+        GL11.glPushMatrix();
+		GL11.glTranslatef(0.0F, 0.5f, 100.065F);
+		if (dialog.renderGradual) {
+			drawString(fontRendererObj, "Text Speed: " + textSpeed, 10, 10, 0xFFFFFF);
+			drawString(fontRendererObj, "Text Sound: " + (textSoundEnabled ? "On" : "Off"), 10, 20, 0xFFFFFF);
+		}
+
+		for (IDialogImage dialogImage : dialog.dialogImages.values()) {
+			if (dialogImage.getImageType() != 0)
+				continue;
+
+			GuiDialogImage image;
+			if (dialogImages.containsKey(dialogImage.getId())) {
+				image = dialogImages.get(dialogImage.getId());
+			} else {
+				image = new GuiDialogImage((DialogImage) dialogImage);
+				dialogImages.put(dialogImage.getId(),image);
 			}
 
-			double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d2 * d2);
-			float f1 = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
-			float f2 = (float)(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
-			invisibleEntity.rotationPitch = updateRotation(invisibleEntity.rotationPitch, f2, 10.0F);
-			invisibleEntity.rotationYaw = updateRotation(invisibleEntity.rotationYaw, f1, 10.0F);
+			GL11.glEnable(GL11.GL_BLEND);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+
+			GL11.glTranslatef(image.alignment%3*((float)(scaledResolution.getScaledWidth())/2), (float) (Math.floor((float)(image.alignment/3))*((float)(scaledResolution.getScaledHeight())/2)),0.0F);
+			image.onRender(mc);
+
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
 		}
 
 		GL11.glPushMatrix();
@@ -486,13 +499,30 @@ public class GuiDialogInteract extends GuiNPCInterface implements IGuiClose
 
 	private void drawDialogString(String text, int left, int count, boolean mainDialogText, TextBlockClient block){
 		int lineOffset = dialog.renderGradual ? (currentBlock < lineBlocks.size() ? lineBlocks.get(currentBlock).lines.size() : lineBlocks.get(lineBlocks.size()-1).lines.size()) - currentLine : 0;
+
 		int height = count - totalRows + lineOffset;
 		int screenPos = optionStart;
 		int y = (height * ClientProxy.Font.height()) + screenPos + scrollY;
+		if (dialog.alignment == 1) {
+			height = count - totalRows + lineOffset + 1;
+			screenPos = optionStart - dialog.textHeight + ClientProxy.Font.height() + (totalRows - lineOffset);
+
+			int scrollToOffset = 0;
+			if (totalRows * ClientProxy.Font.height() > dialog.textHeight) {
+				scrollToOffset = totalRows - lineBlocks.get(lineBlocks.size() - 1).lines.size() + (int) Math.floor(lineBlocks.size() / 2f);
+			}
+			y = ((count - scrollToOffset) * ClientProxy.Font.height()) + screenPos + scrollY + height;
+		}
 
 		if (block.titlePos == 0 || mainDialogText) {
-			if (y < screenPos - dialog.textHeight || y > screenPos - ClientProxy.Font.height()) {
-				return;
+			if (dialog.alignment == 1) {
+				if (y < optionStart - dialog.textHeight || y > optionStart - ClientProxy.Font.height()/2f) {
+					return;
+				}
+			} else {
+				if (y < screenPos - dialog.textHeight || y > screenPos - ClientProxy.Font.height()) {
+					return;
+				}
 			}
 		}
 
@@ -554,11 +584,22 @@ public class GuiDialogInteract extends GuiNPCInterface implements IGuiClose
 			textSoundEnabled = !textSoundEnabled;
 		}
 
-		if (i == mc.gameSettings.keyBindBack.getKeyCode() || i == 201 && scrollY < (totalRows - 2) * ClientProxy.Font.height()) {//Page up
-			scrollY += ClientProxy.Font.height() * 2;
-		}
-		if (i == mc.gameSettings.keyBindBack.getKeyCode() || i == 209 && scrollY > 0) {//Page down
-			scrollY -= ClientProxy.Font.height() * 2;
+		if (dialog.alignment == 1 && totalRows * ClientProxy.Font.height() > dialog.textHeight) {
+			if ((i == mc.gameSettings.keyBindBack.getKeyCode() || i == 201) && scrollY < totalRows * ClientProxy.Font.height()) {//Page up
+				scrollY += ClientProxy.Font.height() * 2;
+			}
+
+			int latestBlockSize = lineBlocks.get(lineBlocks.size() - 1).lines.size();
+			if ((i == mc.gameSettings.keyBindBack.getKeyCode() || i == 209) && scrollY > -(latestBlockSize - 2) * ClientProxy.Font.height()) {//Page down
+				scrollY -= ClientProxy.Font.height() * 2;
+			}
+		} else {
+			if ((i == mc.gameSettings.keyBindBack.getKeyCode() || i == 201) && scrollY < (totalRows - 2) * ClientProxy.Font.height()) {//Page up
+				scrollY += ClientProxy.Font.height() * 2;
+			}
+			if ((i == mc.gameSettings.keyBindBack.getKeyCode() || i == 209) && scrollY > 0) {//Page down
+				scrollY -= ClientProxy.Font.height() * 2;
+			}
 		}
 
     	if(i == 28){
@@ -591,14 +632,6 @@ public class GuiDialogInteract extends GuiNPCInterface implements IGuiClose
     		close();
         	return;
     	}
-
-		if (cameraTarget == this.player) {
-			this.cameraTarget = this.npc;
-		} else {
-			this.cameraTarget = this.player;
-		}
-		this.transitionProgress = 0.0F;
-
     	DialogOption option = dialog.options.get(optionId);
     	if(option == null || option.optionType != EnumOptionType.DialogOption){
     		closed();
@@ -660,9 +693,6 @@ public class GuiDialogInteract extends GuiNPCInterface implements IGuiClose
 		calculateRowHeight();
 		 
 		grabMouse(dialog.showWheel);
-
-		this.cameraTarget = this.player;
-		this.player.mountEntity(this.invisibleEntity);
 	}
 	private void calculateRowHeight(){
 		totalRows = 0;

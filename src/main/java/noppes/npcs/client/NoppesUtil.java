@@ -20,6 +20,7 @@ import noppes.npcs.client.gui.player.GuiQuestCompletion;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.client.gui.util.IScrollData;
+import noppes.npcs.client.gui.util.IScrollGroup;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.controllers.DialogController;
@@ -109,6 +110,7 @@ public class NoppesUtil {
 			entity = worldObj.getEntityByID(compound.getInteger("EntityID"));
 			if (entity != null)
 				worldObj = entity.worldObj;
+			else return;
 		}
 
 		CustomFX fx = CustomFX.fromScriptedParticle(particle, worldObj, entity);
@@ -208,6 +210,43 @@ public class NoppesUtil {
 	}
 	
 	private static HashMap<String,Integer> data = new HashMap<String,Integer>();
+	private static HashMap<String,Integer> group = new HashMap<String,Integer>();
+
+	public static void addScrollGroup(ByteBuf buffer) {
+		try {
+			int size = buffer.readInt();
+			for(int i = 0; i < size; i++){
+				int id = buffer.readInt();
+				String name = Server.readString(buffer);
+				group.put(name, id);
+			}
+		} catch (Exception ignored) {
+		}
+	}
+
+	public static void setScrollGroup(ByteBuf buffer) {
+		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+		if(gui == null)
+			return;
+		try {
+			int size = buffer.readInt();
+			for(int i = 0; i < size; i++){
+				int id = buffer.readInt();
+				String name = Server.readString(buffer);
+				group.put(name, id);
+			}
+		} catch (Exception ignored) {
+		}
+		if(gui instanceof GuiNPCInterface && ((GuiNPCInterface)gui).hasSubGui()){
+			gui = (GuiScreen) ((GuiNPCInterface)gui).getSubGui();
+		}
+		if(gui instanceof GuiContainerNPCInterface && ((GuiContainerNPCInterface)gui).hasSubGui()){
+			gui = (GuiScreen) ((GuiContainerNPCInterface)gui).getSubGui();
+		}
+		if(gui instanceof IScrollGroup)
+			((IScrollGroup)gui).setScrollGroup(new Vector<String>(group.keySet()), group);
+		group = new HashMap<String,Integer>();
+	}
 
 	public static void addScrollData(ByteBuf buffer) {
 		try {
@@ -254,8 +293,8 @@ public class NoppesUtil {
 	}
 	
 	public static void openDialog(NBTTagCompound compound, EntityNPCInterface npc, EntityPlayer player){
-		if(DialogController.instance == null)
-			DialogController.instance = new DialogController();
+		if(DialogController.Instance == null)
+			DialogController.Instance = new DialogController();
 		Dialog dialog = new Dialog();
 		dialog.readNBT(compound);
 		GuiScreen gui = Minecraft.getMinecraft().currentScreen;

@@ -1,10 +1,7 @@
 package kamkeel.command;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import kamkeel.developer.Developer;
 import net.minecraft.command.CommandBase;
@@ -20,7 +17,7 @@ public class CommandKamkeel extends CommandBase{
 	public Map<String, CommandKamkeelBase> map = new HashMap<String, CommandKamkeelBase>();
 	public HelpCommand help = new HelpCommand(this);
 	public String[] alias = {"kam"};
-
+	
 	public CommandKamkeel(){
 		registerCommand(help);
 		registerCommand(new ScriptCommand());

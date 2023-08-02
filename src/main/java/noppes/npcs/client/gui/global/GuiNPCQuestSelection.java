@@ -15,30 +15,34 @@ public class GuiNPCQuestSelection extends GuiNPCInterface implements IScrollData
 {
 	private GuiNPCStringSlot slot;
 	private GuiScreen parent;
-	private HashMap<String,Integer> data;
+	private HashMap<String,Integer> data  = new HashMap<String,Integer>();
+	private int quest;
 	private boolean selectCategory = true;
 	public GuiSelectionListener listener;
-	private int quest;
+
 	
-    public GuiNPCQuestSelection(EntityNPCInterface npc,GuiScreen parent,int quest)
+    public GuiNPCQuestSelection(EntityNPCInterface npc, GuiScreen parent, int quest)
     {
-    	super(npc);
+		super(npc);
     	drawDefaultBackground = false;
 		title = "Select Quest Category";
-    	this.parent = parent;
-    	data = new HashMap<String, Integer>();
+		this.parent = parent;
     	this.quest = quest;
     	
     	if(quest >= 0){
     		Client.sendData(EnumPacketServer.QuestsGetFromQuest, quest);
     		selectCategory = false;
-    		title = "Select Dialog";
+    		title = "Select Quest";
     	}else
     		Client.sendData(EnumPacketServer.QuestCategoriesGet, quest);
     	
     	if(parent instanceof GuiSelectionListener)
     		listener = (GuiSelectionListener) parent;
     }
+
+	public String getSelected(){
+		return slot.selected;
+	}
 
     public void initGui()
     {
@@ -67,23 +71,19 @@ public class GuiNPCQuestSelection extends GuiNPCInterface implements IScrollData
         {
         	if(selectCategory){
             	close();
-            	NoppesUtil.openGUI(player, parent);
+				NoppesUtil.openGUI(player, parent);
         	}else{
-    			title = "Select Dialog Category";
+    			title = "Select Quest Category";
         		selectCategory = true;
         		Client.sendData(EnumPacketServer.QuestCategoriesGet, quest);
         	}
         }
         if(id == 4)
         {
-        	if(slot.selected == null || slot.selected.isEmpty())
-        		return;
         	doubleClicked();
         }
     }
-	public String getSelected(){
-		return slot.selected;
-	}
+
 	public void doubleClicked() {
     	if(slot.selected == null || slot.selected.isEmpty())
     		return;
@@ -97,8 +97,8 @@ public class GuiNPCQuestSelection extends GuiNPCInterface implements IScrollData
 			close();
 			NoppesUtil.openGUI(player, parent);
 		}
-		
 	}
+
 	public void save() {
 		if(quest >= 0){
 			if(listener != null){

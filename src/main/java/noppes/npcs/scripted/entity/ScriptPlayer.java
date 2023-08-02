@@ -25,6 +25,7 @@ import noppes.npcs.api.handler.data.IQuest;
 import noppes.npcs.api.handler.data.ISound;
 import noppes.npcs.api.item.IItemStack;
 import noppes.npcs.api.overlay.ICustomOverlay;
+import noppes.npcs.compat.PixelmonHelper;
 import noppes.npcs.config.ConfigScript;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumQuestRepeat;
@@ -87,7 +88,7 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 	}
 
 	public void setPosition(IPos pos) {
-		this.setPosition(pos.getX(),pos.getY(),pos.getZ());
+		this.setPosition(pos.getXD(),pos.getYD(),pos.getZD());
 	}
 	public void setPos(IPos pos) {
 		this.setPosition(pos);
@@ -110,13 +111,13 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 	}
 
 	public void setPosition(IPos pos, int dimensionId) {
-		this.setPosition(pos.getX(),pos.getY(),pos.getZ(), dimensionId);
+		this.setPosition(pos.getXD(),pos.getYD(),pos.getZD(), dimensionId);
 	}
 	public void setPos(IPos pos, int dimensionId) {
 		this.setPosition(pos,dimensionId);
 	}
 	public void setPosition(IPos pos, IWorld world) {
-		this.setPosition(pos.getX(),pos.getY(),pos.getZ(),world.getDimensionID());
+		this.setPosition(pos.getXD(),pos.getYD(),pos.getZD(),world.getDimensionID());
 	}
 	public void setPos(IPos pos, IWorld world) {
 		this.setPosition(pos,world.getDimensionID());
@@ -179,7 +180,7 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 	}
 
 	public void showDialog(int id){
-		Dialog dialog = (Dialog) DialogController.instance.get(id);
+		Dialog dialog = (Dialog) DialogController.Instance.get(id);
 		if(dialog == null)
 			return;
 
@@ -250,7 +251,7 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 	 * @param id The Quest ID
 	 */
 	public void startQuest(int id){
-        Quest quest = QuestController.instance.quests.get(id);
+        Quest quest = QuestController.Instance.quests.get(id);
         if (quest == null)
         	return;
 		PlayerData data = PlayerDataController.Instance.getPlayerData(player);
@@ -267,7 +268,7 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 	 * @param id The Quest ID
 	 */
 	public void finishQuest(int id){
-        Quest quest = QuestController.instance.quests.get(id);
+        Quest quest = QuestController.Instance.quests.get(id);
         if (quest == null)
         	return;
 		PlayerData data = PlayerDataController.Instance.getPlayerData(player);
@@ -283,7 +284,7 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 	 * @param id The Quest ID
 	 */
 	public void stopQuest(int id){
-        Quest quest = QuestController.instance.quests.get(id);
+        Quest quest = QuestController.Instance.quests.get(id);
         if (quest == null)
         	return;
 		PlayerData data = PlayerDataController.Instance.getPlayerData(player);
@@ -295,7 +296,7 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 	 * @param id The Quest ID
 	 */
 	public void removeQuest(int id){
-        Quest quest = QuestController.instance.quests.get(id);
+        Quest quest = QuestController.Instance.quests.get(id);
         if (quest == null)
         	return;
 		PlayerData data = PlayerDataController.Instance.getPlayerData(player);
@@ -728,7 +729,7 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 
 		while(var3.hasNext()) {
 			int id = (Integer)var3.next();
-			IQuest quest = (IQuest)QuestController.instance.quests.get(id);
+			IQuest quest = (IQuest)QuestController.Instance.quests.get(id);
 			if (quest != null) {
 				quests.add(quest);
 			}
@@ -777,7 +778,7 @@ public class ScriptPlayer<T extends EntityPlayerMP> extends ScriptLivingBase<T> 
 
 		while(var3.hasNext()) {
 			int id = (Integer)var3.next();
-			IQuest quest = (IQuest)QuestController.instance.quests.get(id);
+			IQuest quest = (IQuest)QuestController.Instance.quests.get(id);
 			if (quest != null) {
 				quests.add(quest);
 			}

@@ -400,7 +400,7 @@ public class NoppesUtilServer {
 
 	public static void sendQuestCategoryData(EntityPlayerMP player) {
 		Map<String,Integer> map = new HashMap<String,Integer>();
-		for(QuestCategory category : QuestController.instance.categories.values()){
+		for(QuestCategory category : QuestController.Instance.categories.values()){
 			map.put(category.title, category.id);
 		}
 		sendScrollData(player, map);
@@ -423,7 +423,7 @@ public class NoppesUtilServer {
 				PlayerDialogData data = playerdata.dialogData;
 				
 		        for(int questId : data.dialogsRead){
-		        	Dialog dialog = DialogController.instance.dialogs.get(questId);
+		        	Dialog dialog = DialogController.Instance.dialogs.get(questId);
 		        	if(dialog == null)
 		        		continue;
 		        	map.put(dialog.category.title + ": " + dialog.title,questId);
@@ -433,13 +433,13 @@ public class NoppesUtilServer {
 				PlayerQuestData data = playerdata.questData;
 	
 		        for(int questId : data.activeQuests.keySet()){
-		        	Quest quest = QuestController.instance.quests.get(questId);
+		        	Quest quest = QuestController.Instance.quests.get(questId);
 		        	if(quest == null)
 		        		continue;
 		        	map.put(quest.category.title + ": " + quest.title + "(Active quest)",questId);
 		        }
 		        for(int questId : data.finishedQuests.keySet()){
-		        	Quest quest = QuestController.instance.quests.get(questId);
+		        	Quest quest = QuestController.Instance.quests.get(questId);
 		        	if(quest == null)
 		        		continue;
 		        	map.put(quest.category.title + ": " + quest.title + "(Finished quest)",questId);
@@ -550,12 +550,12 @@ public class NoppesUtilServer {
 	public static void sendRecipeData(EntityPlayerMP player, int size) {
 		HashMap<String,Integer> map = new HashMap<String,Integer>();
 		if(size == 3){
-			for(RecipeCarpentry recipe : RecipeController.instance.globalRecipes.values()){
+			for(RecipeCarpentry recipe : RecipeController.Instance.globalRecipes.values()){
 				map.put(recipe.name, recipe.id);
 			}
 		}
 		else{
-			for(RecipeCarpentry recipe : RecipeController.instance.anvilRecipes.values()){
+			for(RecipeCarpentry recipe : RecipeController.Instance.anvilRecipes.values()){
 				map.put(recipe.name, recipe.id);
 			}
 		}
@@ -573,6 +573,18 @@ public class NoppesUtilServer {
 		Server.sendData(player, EnumPacketClient.SCROLL_DATA, send);
 	}
 
+	public static void sendScrollGroup(EntityPlayerMP player, Map<String,Integer> map){
+		Map<String, Integer> send = new HashMap<String, Integer>();
+		for(String key : map.keySet()){
+			send.put(key, map.get(key));
+			if(send.size() == 100){
+				Server.sendData(player, EnumPacketClient.SCROLL_GROUP_PART, send);
+				send = new HashMap<String, Integer>();
+			}
+		}
+		Server.sendData(player, EnumPacketClient.SCROLL_GROUP, send);
+	}
+
 	public static void sendDialogData(EntityPlayerMP player, DialogCategory category) {
 		if(category == null)
 			return;
@@ -583,6 +595,17 @@ public class NoppesUtilServer {
 		sendScrollData(player, map);
 	}
 
+	public static void sendDialogGroup(EntityPlayerMP player, DialogCategory category) {
+		if(category == null)
+			return;
+		HashMap<String,Integer> map = new HashMap<String,Integer>();
+		for(Dialog dialog : category.dialogs.values()){
+			map.put(dialog.title, dialog.id);
+		}
+
+		sendScrollGroup(player, map);
+	}
+
 	public static void sendQuestData(EntityPlayerMP player, QuestCategory category) {
 		if(category == null)
 			return;
@@ -591,6 +614,17 @@ public class NoppesUtilServer {
 			map.put(quest.title, quest.id);
 		}
 		sendScrollData(player, map);
+	}
+
+	public static void sendQuestGroup(EntityPlayerMP player, QuestCategory category) {
+		if(category == null)
+			return;
+		HashMap<String,Integer> map = new HashMap<String,Integer>();
+		for(Quest quest : category.quests.values()){
+			map.put(quest.title, quest.id);
+		}
+
+		sendScrollGroup(player, map);
 	}
 
 	public static void sendTransportCategoryData(EntityPlayerMP player) {
@@ -749,6 +783,8 @@ public class NoppesUtilServer {
 		if(entity == null){
 			return null;
 		}
+
+		entity.dimension = worldObj.provider.dimensionId;
 		int i = MathHelper.floor_double(entity.posX / 16.0D);
 		int j = MathHelper.floor_double(entity.posZ / 16.0D);
 		if (!entity.forceSpawn && !worldObj.checkChunksExist(

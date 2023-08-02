@@ -22,6 +22,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import nikedemos.markovnames.generators.*;
+import noppes.npcs.compat.PixelmonHelper;
 import noppes.npcs.config.ConfigMain;
 import noppes.npcs.config.LoadConfiguration;
 import noppes.npcs.config.legacy.LegacyConfig;
@@ -34,7 +35,7 @@ import noppes.npcs.scripted.NpcAPI;
 import java.io.File;
 import java.util.Set;
 
-@Mod(modid = "customnpcs", name = "CustomNPC+", version = "1.8.6")
+@Mod(modid = "customnpcs", name = "CustomNPC+", version = "1.9-beta2")
 public class CustomNpcs {
 
     @SidedProxy(clientSide = "noppes.npcs.client.ClientProxy", serverSide = "noppes.npcs.CommonProxy")
@@ -188,7 +189,7 @@ public class CustomNpcs {
 
     @EventHandler
     public void setAboutToStart(FMLServerAboutToStartEvent event) {
-        ChunkController.instance.clear();
+        ChunkController.Instance.clear();
         new QuestController();
         new PlayerDataController();
         new FactionController();
@@ -224,10 +225,10 @@ public class CustomNpcs {
     //Loading items in the about to start event was corrupting items with a damage value
     @EventHandler
     public void started(FMLServerStartedEvent event) {
-        RecipeController.instance.load();
+        RecipeController.Instance.load();
         new DialogController();
         new BankController();
-        QuestController.instance.load();
+        QuestController.Instance.load();
         ScriptController.HasStart = true;
         ServerCloneController.Instance = new ServerCloneController();
         ServerTagMapController.Instance = new ServerTagMapController();
