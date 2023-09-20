@@ -903,7 +903,6 @@ public class PacketHandlerServer{
 		}
 		else if(type == EnumPacketServer.ModelDataSave){
 			if(npc instanceof EntityCustomNpc)
-				System.out.println("dick");
 				((EntityCustomNpc)npc).modelData.readFromNBT(Server.readNBT(buffer));
 		}
 		else if(type == EnumPacketServer.MailOpenSetup){

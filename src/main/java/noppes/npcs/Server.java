@@ -48,6 +48,19 @@ public class Server {
 			e.printStackTrace();
 		}
 	}
+
+	public static void sendAssociatedDataProlonged(final Entity entity, final EnumPacketClient enu, final Object... obs) {
+		ByteBuf buffer = Unpooled.buffer();
+		try {
+			if(!fillBuffer(buffer, enu, obs))
+				return;
+			TargetPoint point = new TargetPoint(entity.dimension, entity.posX, entity.posY, entity.posZ, 248);
+			CustomNpcs.Channel.sendToAllAround(new FMLProxyPacket(buffer,"CustomNPCs"), point);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void sendToAll(EnumPacketClient enu, Object... obs) {
 		ByteBuf buffer = Unpooled.buffer();
 		try {

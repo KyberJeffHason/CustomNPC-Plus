@@ -324,7 +324,7 @@ public class NoppesUtilServer {
 		return null;
 	}
 	public static void spawnParticle(Entity entity,String particle,int dimension){
-		Server.sendAssociatedData(entity, EnumPacketClient.PARTICLE, entity.posX, entity.posY, entity.posZ, entity.height, entity.width, entity.yOffset, particle);
+		Server.sendAssociatedDataProlonged(entity, EnumPacketClient.PARTICLE, entity.posX, entity.posY, entity.posZ, entity.height, entity.width, entity.yOffset, particle);
     }
 
 	public static void spawnScriptedParticle(NBTTagCompound compound, int dimensionId){

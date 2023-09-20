@@ -716,6 +716,13 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="ROME-1.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/libs/ROME-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
     <library name="ShoulderSurfing-1.7.10-2.4.1">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/libs/ShoulderSurfing-1.7.10-2.4.1.jar!/" />

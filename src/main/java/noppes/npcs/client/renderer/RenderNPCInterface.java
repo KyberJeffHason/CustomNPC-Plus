@@ -2,6 +2,7 @@ package noppes.npcs.client.renderer;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
+import lotr.client.render.rome.RenderCustomMob;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
@@ -214,7 +215,11 @@ public class RenderNPCInterface extends RenderLiving{
 		}
 
 		staticRenderManager = this.renderManager;
-		super.doRender(entityliving, d, d1, d2, f, f1);
+		if(!npc.getEntityData().getString("model").equals("")) {
+			RenderCustomMob.main.doRender(entityliving, d, d1, d2, f, f1);
+		} else {
+			super.doRender(entityliving, d, d1, d2, f, f1);
+		}
 	}
 
 	protected void renderModel(EntityLivingBase entityliving, float par2, float par3, float par4, float par5, float par6, float par7) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="CustomNPC-Plus:test" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="com.kamkeel.customnpc-plus" external.system.module.type="sourceSet" external.system.module.version="1.8.6" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="CustomNPC-Plus:test" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="com.kamkeel.customnpc-plus" external.system.module.type="sourceSet" external.system.module.version="1.9-beta2" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="minecraft" name="Minecraft">
       <configuration>
@@ -23,17 +23,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="CustomNPC-Plus.api" />
     <orderEntry type="module" module-name="CustomNPC-Plus.main" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/ShoulderSurfing-1.7.10-2.4.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Gradle: org.spongepowered:mixin:0.7.11-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: :forgeSrc:1.7.10-10.13.4.1614-1.7.10" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraft:launchwrapper:1.12" level="project" />
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
@@ -43,7 +35,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Gradle: net.minecraft:launchwrapper:1.12" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:1.3.9" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-debug-all:5.0.3" level="project" />
     <orderEntry type="library" name="Gradle: com.typesafe.akka:akka-actor_2.11:2.3.3" level="project" />
@@ -100,8 +91,7 @@
     <orderEntry type="library" name="Gradle: org.lwjgl.lwjgl:lwjgl-platform:natives-windows:2.9.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl.lwjgl:lwjgl-platform:natives-linux:2.9.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl.lwjgl:lwjgl-platform:natives-osx:2.9.1" level="project" />
-    <orderEntry type="library" name="LOTR-1.02" level="project" />
-    <orderEntry type="library" name="java" level="project" />
+    <orderEntry type="library" name="ROME-1.2" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="CustomNPC-Plus.main" />
 </module>
